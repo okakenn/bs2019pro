@@ -10,19 +10,16 @@ public class magnet : MonoBehaviour {
     public float moveSpeed;
     public float minDistance;
     public float maxDistance;
+    public int PlayerMagnet;
 
     Ray targetRay;
     RaycastHit raycast;
 
-    bool targetHere = false;
-    Vector3 Distance;
-    int targetTime;
 
-    Rigidbody rigid;
 
 	// Use this for initialization
 	void Start () {
-        rigid = GetComponent<Rigidbody>();
+
 	}
 	
 	// Update is called once per frame
@@ -39,38 +36,59 @@ public class magnet : MonoBehaviour {
         }
         ////ここまでがレーザーが当たっているオブジェクトのデータの取得
 
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))//自身のマグネットの＋(1),－(0)の切り替え
         {
-
-        }
-        if (Input.GetKeyDown(KeyCode.Return)&& hitObject.tag=="plus")//
-        {
-            targetHere = true;
-            Distance = hitObject.transform.position - this.transform.position;
-        }
-        if (Input.GetKeyDown(KeyCode.Return) && hitObject.tag == "minus")//
-        {
-            targetHere = true;
-            Distance = hitObject.transform.position - this.transform.position;
-        }
-
-
-        if (targetHere == true&& hitObject.tag == "plus")
-        {
-            if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
+            if(PlayerMagnet == 0)
             {
-                Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
+                PlayerMagnet = 1;
+            }
+            if(PlayerMagnet == 1)
+            {
+                PlayerMagnet = 0;
             }
         }
 
-        if (targetHere == true && hitObject.tag == "minus")
+
+        if (PlayerMagnet == 1)
         {
-            if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
+            if(hitObject.tag == "plus")
             {
-                Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
+                if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
+                {
+                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
+                }
+            }
+            if (hitObject.tag == "minus")
+            {
+                if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
+                {
+                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
+                }
             }
         }
+
+        if (PlayerMagnet == 0)
+        {
+            if (hitObject.tag == "minus")
+            {
+                if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
+                {
+                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
+                }
+            }
+            if (hitObject.tag == "plus")
+            {
+                if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
+                {
+                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
+                }
+            }
+        }
+
+
     }
 }
