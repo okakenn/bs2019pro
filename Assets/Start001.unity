@@ -573,7 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118582b9c91a51b498508ed0fbe05374, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayDistance: 10
+  rayDistance: 30
   hitObject: {fileID: 0}
   PlayerMagnet: 0
   moveSpeed: 0.3

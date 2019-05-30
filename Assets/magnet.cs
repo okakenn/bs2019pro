@@ -15,6 +15,11 @@ public class magnet : MonoBehaviour {
     Ray targetRay;
     RaycastHit raycast;
 
+    public GameObject localRayStartPos;
+    public float rayEndLength;
+    public GameObject Debug_BeemOBJ;
+    public bool DebugMode;
+
     bool targetHere = false;
     int targetTime;
 
@@ -28,10 +33,16 @@ public class magnet : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        targetRay.direction = transform.forward.normalized;
-        targetRay.origin = transform.position;
+        targetRay.origin = localRayStartPos.transform.position;
+        targetRay.direction = (transform.forward.normalized * rayEndLength - targetRay.origin).normalized;
 
-        Debug.DrawRay(transform.position, targetRay.direction * rayDistance, Color.yellow, 0.1f, false);
+        if (DebugMode)
+        {
+            var beem = Instantiate(Debug_BeemOBJ, localRayStartPos.transform.position, new Quaternion(0, 0, 0, 0), transform);
+            beem.GetComponent<Rigidbody>().AddForce(targetRay.direction * 100);
+        }
+
+        Debug.DrawRay(targetRay.origin, targetRay.direction * rayDistance, Color.yellow, 0.1f, false);
 
         if (Physics.Raycast(targetRay, out raycast, rayDistance))
         {
