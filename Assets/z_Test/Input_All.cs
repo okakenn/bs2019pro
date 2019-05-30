@@ -64,6 +64,15 @@ public class Input_All : MonoBehaviour {
             DO_JUMP = false;
         }
 
+        if (Input.GetKey(KeyCode.J))
+        {
+            DO_JUMP = true;
+        }
+        if (Input.GetKeyUp(KeyCode.J))
+        {
+            DO_JUMP = false;
+        }
+
 
         //GO_FRONT = false;
         //GO_BACK = false;
