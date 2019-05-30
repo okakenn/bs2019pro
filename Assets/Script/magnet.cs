@@ -7,19 +7,22 @@ public class magnet : MonoBehaviour {
     public float rayDistance;
     public GameObject hitObject;
 
+    public int PlayerMagnet;
     public float moveSpeed;
     public float minDistance;
     public float maxDistance;
-    public int PlayerMagnet;
 
     Ray targetRay;
     RaycastHit raycast;
 
+    bool targetHere = false;
+    int targetTime;
 
+    Rigidbody rigid;
 
 	// Use this for initialization
 	void Start () {
-
+        rigid = GetComponent<Rigidbody>();
 	}
 	
 	// Update is called once per frame
@@ -36,7 +39,7 @@ public class magnet : MonoBehaviour {
         }
         ////ここまでがレーザーが当たっているオブジェクトのデータの取得
 
-        if (Input.GetKeyDown(KeyCode.M))//自身のマグネットの＋(1),－(0)の切り替え
+        if (Input.GetKeyDown(KeyCode.M))
         {
             if(PlayerMagnet == 0)
             {
@@ -48,47 +51,42 @@ public class magnet : MonoBehaviour {
             }
         }
 
-
-        if (PlayerMagnet == 1)
+        if (Input.GetKeyDown(KeyCode.Return)&& hitObject.tag=="plus")//
         {
-            if(hitObject.tag == "plus")
-            {
-                if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
-                {
-                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
-                }
-            }
-            if (hitObject.tag == "minus")
-            {
-                if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
-                {
-                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
-                }
-            }
+            targetHere = true;
         }
-
-        if (PlayerMagnet == 0)
+        if (Input.GetKeyDown(KeyCode.Return) && hitObject.tag == "minus")//
         {
-            if (hitObject.tag == "minus")
-            {
-                if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
-                {
-                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
-                }
-            }
-            if (hitObject.tag == "plus")
-            {
-                if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
-                {
-                    Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
-                    hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
-                }
-            }
+            targetHere = true;
         }
 
 
+        if (targetHere == true&& hitObject.tag == "plus")
+        {
+            if ((transform.position - hitObject.transform.position).sqrMagnitude > minDistance)
+            {
+                Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position + moveVec);
+            }
+            else
+            {
+                targetHere = false;
+                hitObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
+        }
+
+        if (targetHere == true && hitObject.tag == "minus")
+        {
+            if ((transform.position - hitObject.transform.position).sqrMagnitude < maxDistance)
+            {
+                Vector3 moveVec = (transform.position - hitObject.transform.position).normalized * moveSpeed;
+                hitObject.GetComponent<Rigidbody>().MovePosition(hitObject.transform.position - moveVec);
+            }
+            else
+            {
+                targetHere = false;
+                hitObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
+        }
     }
 }
